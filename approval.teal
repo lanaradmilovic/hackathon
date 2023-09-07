@@ -1,0 +1,504 @@
+#pragma version 8
+txn ApplicationID
+int 0
+==
+bnz main_l29
+txn OnCompletion
+int DeleteApplication
+==
+bnz main_l28
+txn OnCompletion
+int UpdateApplication
+==
+bnz main_l27
+txn OnCompletion
+int OptIn
+==
+bnz main_l26
+txn OnCompletion
+int CloseOut
+==
+bnz main_l25
+txn OnCompletion
+int NoOp
+==
+bnz main_l7
+err
+main_l7:
+txna ApplicationArgs 0
+byte "create_coffee"
+==
+bnz main_l24
+txna ApplicationArgs 0
+byte "receive_coffee"
+==
+bnz main_l23
+txna ApplicationArgs 0
+byte "process_coffee"
+==
+bnz main_l22
+txna ApplicationArgs 0
+byte "pack_coffee"
+==
+bnz main_l21
+txna ApplicationArgs 0
+byte "ship_coffee"
+==
+bnz main_l20
+txna ApplicationArgs 0
+byte "receive_at_port"
+==
+bnz main_l19
+txna ApplicationArgs 0
+byte "roast_coffee"
+==
+bnz main_l18
+txna ApplicationArgs 0
+byte "export_coffee"
+==
+bnz main_l16
+err
+main_l16:
+callsub exportcoffee_7
+main_l17:
+int 0
+return
+main_l18:
+callsub roastcoffee_6
+b main_l17
+main_l19:
+callsub receiveatport_5
+b main_l17
+main_l20:
+callsub shipcoffee_4
+b main_l17
+main_l21:
+callsub packcoffee_3
+b main_l17
+main_l22:
+callsub processcoffee_2
+b main_l17
+main_l23:
+callsub receivecoffee_1
+b main_l17
+main_l24:
+callsub createcoffee_0
+b main_l17
+main_l25:
+int 0
+return
+main_l26:
+int 1
+return
+main_l27:
+int 0
+return
+main_l28:
+int 0
+return
+main_l29:
+int 1
+return
+
+// create_coffee
+createcoffee_0:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 5
+==
+&&
+assert
+txn Sender
+byte "farmer"
+byte ""
+app_local_put
+txn Sender
+byte "coffee_guid"
+txna ApplicationArgs 0
+app_local_put
+txna Accounts 1
+byte "coffee_guid"
+txna ApplicationArgs 0
+app_local_put
+txn Sender
+byte "coffee_type"
+txna ApplicationArgs 1
+btoi
+app_local_put
+txna Accounts 1
+byte "coffee_type"
+txna ApplicationArgs 1
+btoi
+app_local_put
+txn Sender
+byte "coffee_batch_number"
+txna ApplicationArgs 2
+btoi
+app_local_put
+txna Accounts 1
+byte "coffee_batch_number"
+txna ApplicationArgs 2
+btoi
+app_local_put
+txn Sender
+byte "coffee_batch_size"
+txna ApplicationArgs 3
+btoi
+app_local_put
+txna Accounts 1
+byte "coffee_batch_size"
+txna ApplicationArgs 3
+btoi
+app_local_put
+txn Sender
+byte "coffee_roaster"
+byte ""
+app_local_put
+txna Accounts 1
+byte "coffee_roaster"
+byte ""
+app_local_put
+int 1
+return
+
+// receive_coffee
+receivecoffee_1:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int axfer
+==
+gtxn 1 AssetReceiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 1
+==
+&&
+assert
+txna Accounts 1
+byte "farmer"
+byte ""
+app_local_put
+txna Accounts 1
+byte "coffee_roaster"
+txn Sender
+app_local_put
+int 1
+return
+
+// process_coffee
+processcoffee_2:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 1
+==
+&&
+assert
+txn Sender
+byte "coffee_batch_size"
+txna ApplicationArgs 0
+btoi
+app_local_put
+int 1
+return
+
+// pack_coffee
+packcoffee_3:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 1
+==
+&&
+assert
+txn Sender
+byte "coffee_batch_size"
+txna ApplicationArgs 0
+btoi
+app_local_put
+int 1
+return
+
+// ship_coffee
+shipcoffee_4:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 1
+==
+&&
+assert
+txn Sender
+byte "coffee_batch_number"
+txna ApplicationArgs 0
+btoi
+app_local_put
+int 1
+return
+
+// receive_at_port
+receiveatport_5:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 3
+==
+&&
+assert
+txna Accounts 1
+byte "coffee_batch_size"
+txna ApplicationArgs 0
+btoi
+app_local_put
+txna Accounts 1
+byte "coffee_batch_number"
+txna ApplicationArgs 1
+btoi
+app_local_put
+txna Accounts 1
+byte "coffee_roaster"
+txna ApplicationArgs 2
+app_local_put
+int 1
+return
+
+// roast_coffee
+roastcoffee_6:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 1
+==
+&&
+assert
+txn Sender
+byte "coffee_roaster"
+txn Sender
+app_local_put
+int 1
+return
+
+// export_coffee
+exportcoffee_7:
+proto 0 0
+global GroupSize
+int 2
+==
+txn GroupIndex
+int 0
+==
+&&
+assert
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+assert
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 1 Receiver
+global CurrentApplicationAddress
+==
+&&
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&&
+txn NumAppArgs
+int 1
+==
+&&
+assert
+txna Accounts 1
+byte "coffee_guid"
+txna ApplicationArgs 0
+app_local_put
+txna Accounts 1
+byte "coffee_roaster"
+txn Sender
+app_local_put
+int 1
+return
